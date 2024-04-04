@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="|Profile ${username}|"></title>
+</head>
+<body>
+
+
+<div th:text="${error}"></div>
+<div th:text="${message}"></div>
+
+<div th:text="${username}">
+
+</div>
+<div th:if="${authorized}" th:switch="${friendship}">
+    <form th:action="@{|/profile/${username}|}" th:method="post">
+        <input hidden="hidden" th:value="${username}">
+        <button th:case="${friendship.NONE}" name="action" value="send"> Send</button>
+        <button th:case="${friendship.FRIENDS}" name="action" value="unfriend"> Unfriend</button>
+        <button th:case="${friendship.RECEIVED}" name="action" value="accept"> Accept</button>
+        <button th:case="${friendship.RECEIVED}" name="action" value="reject"> Reject</button>
+        <button th:case="${friendship.SENT}" name="action" value="cancel"> Cancel</button>
+    </form>
+</div>
+</body>
+</html>

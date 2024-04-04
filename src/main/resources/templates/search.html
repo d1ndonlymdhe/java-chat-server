@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+</head>
+<body>
+<form th:action="@{/search}" th:method="post">
+    <label>
+        Query:
+        <input type="text" th:name="username" th:value="${username}">
+    </label>
+</form>
+<div th:each="user: ${result}">
+    <a th:href="@{|/profile/${user.username()}|}" th:text="${user.username()}"></a>
+    <br>
+</div>
+</body>
+</html>
