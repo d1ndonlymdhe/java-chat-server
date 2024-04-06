@@ -51,7 +51,16 @@ public class FriendshipController {
 
     }
 
-    @GetMapping("/api/friendship")
+    @PostMapping("/api/friendship/cancel")
+    @ResponseBody
+    @Transactional
+    public Response<String> cancelRequest(@RequestBody TokenedRequest<String> request) {
+        return friendshipService.cancelRequest(request);
+    }
+
+
+
+    @PostMapping("/api/friendship")
     @ResponseBody
     @Transactional
     public Response<FriendshipStatus> friendship(@RequestBody TokenedRequest<String> request) {

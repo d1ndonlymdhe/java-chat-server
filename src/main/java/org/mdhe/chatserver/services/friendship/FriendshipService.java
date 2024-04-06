@@ -107,6 +107,7 @@ public class FriendshipService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
 
         friendshipRepository.save(new Friendship(u, friend.get()));
+        friendshipRepository.save(new Friendship(friend.get(),u));
         //TODO: set notifications
         return new Response<>(true, "Friend request accepted");
     }
@@ -151,11 +152,13 @@ public class FriendshipService {
         if (u.getId().equals(friendId))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot delete self");
 
-        List<Friendship> matchingFriendship = u.getFriendships().stream().filter(f -> f.getMember().getId().equals(friendId)).limit(1).toList();
-        if (matchingFriendship.isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Friendship does not exist");
+        List<Friendship> matchingFriendship1 = u.getFriendships().stream().filter(f -> f.getMember().getId().equals(friendId)).limit(1).toList();
+        List<Friendship> matchingFriendship2 = userRepository.findById(friendId).get().getFriendships().stream().filter(f->f.getMember().getId().equals(u.getId())).limit(1).toList();
 
-        friendshipRepository.delete(matchingFriendship.getFirst());
+        if (matchingFriendship1.isEmpty() || matchingFriendship2.isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Friendship does not exist");
+        friendshipRepository.delete(matchingFriendship1.getFirst());
+        friendshipRepository.delete(matchingFriendship2.getFirst());
         return new Response<>(true, "Deleted Friendship");
 
     }
